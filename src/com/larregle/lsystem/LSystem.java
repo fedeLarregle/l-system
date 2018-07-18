@@ -6,14 +6,16 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Deque;
 import java.util.LinkedList;
+import java.util.List;
 
 public class LSystem {
 
     private static final LSystem instance;
 
+    public static final String DEFAULT_FILE_NAME = "l-system.png";
     public static final int WIDTH = 1920;
     public static final int HEIGHT = 1080;
 
@@ -28,6 +30,10 @@ public class LSystem {
     public static LSystem getInstance() { return instance; }
 
     public void generate(String axiom, Rule rule) throws Exception {
+        generate(axiom, Arrays.asList(rule), DEFAULT_FILE_NAME);
+    }
+
+    public void generate(String axiom, List<Rule> rules, String fileName) throws Exception {
         BufferedImage image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
         Graphics2D graphics = (Graphics2D) image.getGraphics();
         String sentence = axiom;
@@ -35,19 +41,25 @@ public class LSystem {
         for (int i = 0; i < iterations; i++) {
             StringBuilder nextSentence = new StringBuilder();
             for (int j = 0; j < sentence.length(); j++) {
-                if (sentence.charAt(j) == rule.getHaving()) {
-                    nextSentence.append(rule.getResults());
-                } else {
-                    nextSentence.append(sentence.charAt(j));
+                boolean founded = false;
+                for (Rule r : rules) {
+                    if (sentence.charAt(j) == r.getHaving()) {
+                        nextSentence.append(r.getResults());
+                        founded = true;
+                        break;
+                    }
                 }
+                if (!founded) { nextSentence.append(sentence.charAt(j)); }
+
             }
             sentence = nextSentence.toString();
         }
 
         drawTree(graphics, sentence);
 
-        ImageIO.write(image, "png", new File("l-system.png"));
+        ImageIO.write(image, "png", new File(fileName));
     }
+
 
     private void drawTree(Graphics2D graphics, String sentence) {
         int x = WIDTH / 2;

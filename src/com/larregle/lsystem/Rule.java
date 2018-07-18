@@ -13,7 +13,5 @@ public class Rule {
         return having;
     }
 
-    public String getResults() {
-        return results;
-    }
+    public String getResults() { return results; }
 }
