@@ -16,21 +16,29 @@ public class LSystem {
     private static final LSystem instance;
 
     public static final String DEFAULT_FILE_NAME = "l-system.png";
+    public static final int DEFAULT_ITERATIONS = 5;
+    public static final float DEFAULT_ANGLE_POWER = 22.5F;
     public static final int WIDTH = 1920;
     public static final int HEIGHT = 1080;
 
     private int iterations;
+    private float anglePower;
 
     static { instance = new LSystem(); }
 
     private LSystem() {
-        iterations = 5;
+        iterations = DEFAULT_ITERATIONS;
+        anglePower = DEFAULT_ANGLE_POWER;
     }
 
     public static LSystem getInstance() { return instance; }
 
     public void generate(String axiom, Rule rule) throws Exception {
         generate(axiom, Arrays.asList(rule), DEFAULT_FILE_NAME);
+    }
+
+    public void generate(String axiom, Rule rule, String fileName) throws Exception {
+        generate(axiom, Arrays.asList(rule), fileName);
     }
 
     public void generate(String axiom, List<Rule> rules, String fileName) throws Exception {
@@ -64,8 +72,8 @@ public class LSystem {
     private void drawTree(Graphics2D graphics, String sentence) {
         int x = WIDTH / 2;
         int y = HEIGHT;
-        int angle = 90;
-        float len = 10F;
+        float angle = 90;
+        float len = 8F;
         int x2 = x - (int) (Math.cos(Math.toRadians(angle)) * len);
         int y2 = y - (int) (Math.sin(Math.toRadians(angle)) * len);
 
@@ -78,9 +86,9 @@ public class LSystem {
                 x = x2;
                 y = y2;
             } else if (sentence.charAt(i) == '+') {
-                angle += 25;
+                angle += anglePower;
             } else if (sentence.charAt(i) == '-') {
-                angle -= 25;
+                angle -= anglePower;
             } else if (sentence.charAt(i) == '[') {
                 branches.addFirst(new Branch(x, y, angle));
             } else if (sentence.charAt(i) == ']') {
@@ -94,5 +102,21 @@ public class LSystem {
             x2 = x - (int) (Math.cos(Math.toRadians(angle)) * len);
             y2 = y - (int) (Math.sin(Math.toRadians(angle)) * len);
         }
+    }
+
+    public int getIterations() {
+        return iterations;
+    }
+
+    public void setIterations(int iterations) {
+        this.iterations = iterations;
+    }
+
+    public float getAnglePower() {
+        return anglePower;
+    }
+
+    public void setAnglePower(float anglePower) {
+        this.anglePower = anglePower;
     }
 }

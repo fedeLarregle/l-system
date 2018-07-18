@@ -3,9 +3,9 @@ package com.larregle.lsystem;
 public class Branch {
     private final int x;
     private final int y;
-    private final int angle;
+    private final float angle;
 
-    public Branch(int x, int y, int angle) {
+    public Branch(int x, int y, float angle) {
         this.x = x;
         this.y = y;
         this.angle = angle;
@@ -19,7 +19,7 @@ public class Branch {
         return y;
     }
 
-    public int getAngle() {
+    public float getAngle() {
         return angle;
     }
 }
